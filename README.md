@@ -12,13 +12,19 @@ Main flow:
 Frontend → API Gateway → Microservices → Databases
 ```
 
-Know more about the architecture in the [Architecture Documentation](docs/architecture.md).
+For more details, see: [Architecture Documentation](docs/architecture.md).
 
-## Services
+## Microservices Responsibilities
 
-- auth-service: users, students, professors and authentication.
-- academic-service: disciplines, classes and enrollments.
-- activity-service: activities, submissions and grades.
+The project is divided into three independent microservices:
+
+- `auth-service`: responsible for users, students, professors and authentication.
+- `academic-service`: responsible for disciplines, classes and enrollments.
+- `activity-service`: responsible for activities, submissions and grades.
+
+Each service owns its own entities, database and business rules.
+
+For more details, see: [Microservices Responsibilities](docs/microservices.md)
 
 ## Main Technologies
 
