@@ -4,9 +4,15 @@ A scalable academic management platform built with microservices, REST APIs, API
 
 ## Architecture
 
-The platform follows a microservices architecture:
+The project follows a microservices architecture using an API Gateway as the single entry point between the frontend and backend services.
 
-Frontend → API Gateway → Microservices
+Main flow:
+
+```text
+Frontend → API Gateway → Microservices → Databases
+```
+
+Know more about the architecture in the [Architecture Documentation](docs/architecture.md).
 
 ## Services
 
