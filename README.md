@@ -40,5 +40,5 @@ For more details, see: [Microservices Responsibilities](docs/microservices.md)
 ## Running the project
 
 ```bash
-cd infra
-docker compose up
+docker compose -f infra/docker-compose.yml up --build
+```

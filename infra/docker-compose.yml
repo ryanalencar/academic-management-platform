@@ -1,0 +1,153 @@
+name: academic-management-platform
+
+services:
+  # gateway:
+  #   container_name: academic-gateway
+  #   build:
+  #     context: ../gateway
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     NODE_ENV: production
+  #     GATEWAY_PORT: 3000
+  #     AUTH_SERVICE_URL: http://auth-service:3001
+  #     ACADEMIC_SERVICE_URL: http://academic-service:3002
+  #     ACTIVITY_SERVICE_URL: http://activity-service:3003
+  #   depends_on:
+  #     auth-service:
+  #       condition: service_started
+  #     academic-service:
+  #       condition: service_started
+  #     activity-service:
+  #       condition: service_started
+  #   networks:
+  #     - academic-network
+
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ../services/auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      AUTH_SERVICE_PORT: 3001
+      DATABASE_URL: postgresql://postgres:postgres@auth-db:5432/auth_db
+      JWT_SECRET: local_secret
+      JWT_EXPIRES_IN: 1d
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    networks:
+      - academic-network
+
+  academic-service:
+    container_name: academic-service
+    build:
+      context: ../services/academic-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: production
+      ACADEMIC_SERVICE_PORT: 3002
+      DATABASE_URL: postgresql://postgres:postgres@academic-db:5432/academic_db
+      AUTH_SERVICE_URL: http://auth-service:3001
+    depends_on:
+      academic-db:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+    networks:
+      - academic-network
+
+  activity-service:
+    container_name: activity-service
+    build:
+      context: ../services/activity-service
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    environment:
+      NODE_ENV: production
+      ACTIVITY_SERVICE_PORT: 3003
+      DATABASE_URL: postgresql://postgres:postgres@activity-db:5432/activity_db
+      AUTH_SERVICE_URL: http://auth-service:3001
+      ACADEMIC_SERVICE_URL: http://academic-service:3002
+    depends_on:
+      activity-db:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+      academic-service:
+        condition: service_started
+    networks:
+      - academic-network
+
+  auth-db:
+    container_name: auth-db
+    image: postgres:16-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_db
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d auth_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - academic-network
+
+  academic-db:
+    container_name: academic-db
+    image: postgres:16-alpine
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: academic_db
+    volumes:
+      - academic-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d academic_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - academic-network
+
+  activity-db:
+    container_name: activity-db
+    image: postgres:16-alpine
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: activity_db
+    volumes:
+      - activity-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d activity_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - academic-network
+
+networks:
+  academic-network:
+    driver: bridge
+
+volumes:
+  auth-db-data:
+  academic-db-data:
+  activity-db-data:
