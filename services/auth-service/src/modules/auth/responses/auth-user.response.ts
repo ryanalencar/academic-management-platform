@@ -1,4 +1,4 @@
-import { UserType } from 'prisma/generated/client';
+import { UserType } from 'src/generated/prisma/enums';
 
 export type AuthUserResponse = {
   id: string;

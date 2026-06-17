@@ -8,7 +8,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { RegisterProfessorDto } from './dto/register-professor.dto';
 import { RegisterStudentDto } from './dto/register-student.dto';
 import { AuthUserResponse } from './responses/auth-user.response';
-import { UserType } from 'prisma/generated/client';
+import { UserType } from 'src/generated/prisma/enums';
 
 const PASSWORD_SALT_ROUNDS = 10;
 
@@ -18,6 +18,8 @@ export class AuthService {
 
   async registerStudent(dto: RegisterStudentDto): Promise<AuthUserResponse> {
     await this.ensureEmailIsAvailable(dto.email);
+
+    console.log('Registering student with email:', dto.email);
 
     const hashedPassword = await this.hashPassword(dto.password);
 
@@ -42,7 +44,8 @@ export class AuthService {
       });
 
       return this.toAuthUserResponse(user);
-    } catch {
+    } catch (error) {
+      console.log('Error registering student:', error);
       throw new InternalServerErrorException('Could not register student');
     }
   }
@@ -81,17 +84,21 @@ export class AuthService {
   }
 
   private async ensureEmailIsAvailable(email: string): Promise<void> {
-    const existingUser = await this.prismaService.user.findUnique({
-      where: {
-        email,
-      },
-      select: {
-        id: true,
-      },
-    });
+    try {
+      const existingUser = await this.prismaService.user.findUnique({
+        where: {
+          email,
+        },
+      });
 
-    if (existingUser) {
-      throw new ConflictException('Email is already in use');
+      if (existingUser) {
+        throw new ConflictException('Email is already in use');
+      }
+    } catch (error) {
+      console.log('Error checking email availability:', error);
+      throw new InternalServerErrorException(
+        'Could not check email availability',
+      );
     }
   }
 
