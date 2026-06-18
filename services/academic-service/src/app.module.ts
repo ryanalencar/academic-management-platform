@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { RequestLoggerMiddleware } from './common/middlewares/request-logger.middleware';
+import { DisciplinesModule } from './modules/disciplines/disciplines.module';
 import { HealthModule } from './modules/health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -11,6 +12,7 @@ import { PrismaModule } from './prisma/prisma.module';
     }),
     PrismaModule,
     HealthModule,
+    DisciplinesModule,
   ],
 })
 export class AppModule implements NestModule {
