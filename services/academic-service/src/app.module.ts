@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { RequestLoggerMiddleware } from './common/middlewares/request-logger.middleware';
 import { ClassesModule } from './modules/classes/classes.module';
 import { DisciplinesModule } from './modules/disciplines/disciplines.module';
+import { EnrollmentsModule } from './modules/enrollments/enrollments.module';
 import { HealthModule } from './modules/health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -15,6 +16,7 @@ import { PrismaModule } from './prisma/prisma.module';
     HealthModule,
     DisciplinesModule,
     ClassesModule,
+    EnrollmentsModule,
   ],
 })
 export class AppModule implements NestModule {
