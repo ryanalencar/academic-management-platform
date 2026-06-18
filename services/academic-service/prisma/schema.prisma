@@ -7,3 +7,48 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum EnrollmentStatus {
+  ACTIVE
+  CANCELLED
+  COMPLETED
+}
+
+model Discipline {
+  id          String   @id @default(uuid())
+  name        String
+  code        String   @unique
+  workload    Int
+  professorId String
+  classes     Class[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Class {
+  id           String       @id @default(uuid())
+  semester     String
+  schedule     String
+  disciplineId String
+  discipline   Discipline   @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+  enrollments  Enrollment[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([disciplineId])
+}
+
+model Enrollment {
+  id        String           @id @default(uuid())
+  date      DateTime         @default(now())
+  status    EnrollmentStatus @default(ACTIVE)
+  studentId String
+  classId   String
+  class     Class            @relation(fields: [classId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([studentId, classId])
+  @@index([studentId])
+  @@index([classId])
+}
