@@ -11,19 +11,19 @@ export enum EnrollmentStatus {
 
 export interface User {
   id: string;
-  nome: string;
+  name: string;
   email: string;
-  tipo: UserRole;
+  role: string;
 }
 
 export interface Student extends User {
-  matricula: string;
-  curso: string;
+  registrationNumber: string;
+  course: string;
 }
 
 export interface Professor extends User {
   siape: string;
-  departamento: string;
+  department: string;
 }
 
 export interface Discipline {
@@ -67,23 +67,23 @@ export interface Submission {
 
 export interface LoginRequest {
   email: string;
-  senha: string;
+  password: string;
 }
 
 export interface RegisterStudentRequest {
-  nome: string;
+  name: string;
   email: string;
-  senha: string;
-  matricula: string;
-  curso: string;
+  password: string;
+  registrationNumber: string;
+  course: string;
 }
 
 export interface RegisterProfessorRequest {
-  nome: string;
+  name: string;
   email: string;
-  senha: string;
+  password: string;
   siape: string;
-  departamento: string;
+  department: string;
 }
 
 export interface AuthResponse {

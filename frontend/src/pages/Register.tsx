@@ -9,13 +9,13 @@ type Role = 'student' | 'professor';
 
 export function Register() {
   const [role, setRole] = useState<Role>('student');
-  const [nome, setNome] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [matricula, setMatricula] = useState('');
-  const [curso, setCurso] = useState('');
+  const [password, setPassword] = useState('');
+  const [registrationNumber, setRegistrationNumber] = useState('');
+  const [course, setCourse] = useState('');
   const [siape, setSiape] = useState('');
-  const [departamento, setDepartamento] = useState('');
+  const [department, setDepartment] = useState('');
   const [loading, setLoading] = useState(false);
 
   const { registerStudent, registerProfessor } = useAuth();
@@ -26,9 +26,9 @@ export function Register() {
     setLoading(true);
     try {
       if (role === 'student') {
-        await registerStudent({ nome, email, senha, matricula, curso });
+        await registerStudent({ name, email, password, registrationNumber, course });
       } else {
-        await registerProfessor({ nome, email, senha, siape, departamento });
+        await registerProfessor({ name, email, password, siape, department });
       }
       toast.success('Cadastro realizado com sucesso!');
       navigate('/');
@@ -62,19 +62,19 @@ export function Register() {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <Input label="Nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
+          <Input label="Nome" value={name} onChange={(e) => setName(e.target.value)} required />
           <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <Input label="Senha" type="password" value={senha} onChange={(e) => setSenha(e.target.value)} required />
+          <Input label="Senha" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
 
           {role === 'student' ? (
             <>
-              <Input label="Matrícula" value={matricula} onChange={(e) => setMatricula(e.target.value)} required />
-              <Input label="Curso" value={curso} onChange={(e) => setCurso(e.target.value)} required />
+              <Input label="Matrícula" value={registrationNumber} onChange={(e) => setRegistrationNumber(e.target.value)} required />
+              <Input label="Curso" value={course} onChange={(e) => setCourse(e.target.value)} required />
             </>
           ) : (
             <>
               <Input label="SIAPE" value={siape} onChange={(e) => setSiape(e.target.value)} required />
-              <Input label="Departamento" value={departamento} onChange={(e) => setDepartamento(e.target.value)} required />
+              <Input label="Departamento" value={department} onChange={(e) => setDepartment(e.target.value)} required />
             </>
           )}
 

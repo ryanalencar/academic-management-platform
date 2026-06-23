@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 export function Login() {
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      await login({ email, senha });
+      await login({ email, password });
       toast.success('Login realizado com sucesso!');
       navigate('/');
     } catch {
@@ -43,8 +43,8 @@ export function Login() {
           <Input
             label="Senha"
             type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
           <Button type="submit" disabled={loading}>

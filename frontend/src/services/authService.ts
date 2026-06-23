@@ -13,12 +13,12 @@ export const authService = {
   },
 
   async registerStudent(data: RegisterStudentRequest): Promise<AuthResponse> {
-    const response = await api.post<AuthResponse>('/auth/register/student', data);
+    const response = await api.post<AuthResponse>('/auth/students', data);
     return response.data;
   },
 
   async registerProfessor(data: RegisterProfessorRequest): Promise<AuthResponse> {
-    const response = await api.post<AuthResponse>('/auth/register/professor', data);
+    const response = await api.post<AuthResponse>('/auth/professors', data);
     return response.data;
   },
 };
