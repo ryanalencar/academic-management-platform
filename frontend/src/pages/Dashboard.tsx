@@ -5,11 +5,11 @@ import { MdMenuBook, MdClass, MdPeople, MdAssignment } from 'react-icons/md';
 
 export function Dashboard() {
   const { user } = useAuth();
-  const isProfessor = user?.tipo === UserRole.PROFESSOR;
+  const isProfessor = user?.role === UserRole.PROFESSOR;
 
   return (
     <div className="page">
-      <h1>Bem-vindo, {user?.nome}!</h1>
+      <h1>Bem-vindo, {user?.name}!</h1>
       <p className="subtitle">
         {isProfessor
           ? 'Painel do Professor — gerencie suas disciplinas, turmas e atividades.'

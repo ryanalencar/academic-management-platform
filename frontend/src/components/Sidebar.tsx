@@ -5,8 +5,6 @@ import {
   MdDashboard,
   MdMenuBook,
   MdClass,
-  MdAssignment,
-  MdGrading,
   MdPeople,
   MdLogout,
 } from 'react-icons/md';
@@ -20,13 +18,13 @@ export function Sidebar() {
     navigate('/login');
   }
 
-  const isProfessor = user?.tipo === UserRole.PROFESSOR;
+  const isProfessor = user?.role === UserRole.PROFESSOR;
 
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
         <h2>📚 Acadêmico</h2>
-        <p className="sidebar-user">{user?.nome}</p>
+        <p className="sidebar-user">{user?.name}</p>
         <span className="sidebar-role">
           {isProfessor ? 'Professor' : 'Aluno'}
         </span>
@@ -47,14 +45,6 @@ export function Sidebar() {
 
         <NavLink to="/enrollments" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
           <MdPeople /> Matrículas
-        </NavLink>
-
-        <NavLink to="/activities" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
-          <MdAssignment /> Atividades
-        </NavLink>
-
-        <NavLink to="/submissions" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
-          <MdGrading /> Entregas
         </NavLink>
       </nav>
 
