@@ -22,7 +22,7 @@ export interface Student extends User {
 }
 
 export interface Professor extends User {
-  siape: string;
+  employeeNumber: string;
   department: string;
 }
 
@@ -82,7 +82,7 @@ export interface RegisterProfessorRequest {
   name: string;
   email: string;
   password: string;
-  siape: string;
+  employeeNumber: string;
   department: string;
 }
 
