@@ -1,42 +1,36 @@
 generator client {
-  provider = "prisma-client-js"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
-enum UserType {
-  STUDENT
-  PROFESSOR
-  ADMIN
+model Activity {
+  id          String       @id @default(uuid())
+  title       String
+  description String
+  deadline    DateTime
+  classId     String
+  submissions Submission[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([classId])
 }
 
-model User {
-  id        String     @id @default(uuid())
-  name      String
-  email     String     @unique
-  password  String
-  type      UserType
-  student   Student?
-  professor Professor?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-}
+model Submission {
+  id          String   @id @default(uuid())
+  submittedAt DateTime @default(now())
+  grade       Float?
+  activityId  String
+  studentId   String
+  activity    Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-model Student {
-  id                 String @id @default(uuid())
-  registrationNumber String @unique
-  course             String
-  userId             String @unique
-  user               User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Professor {
-  id             String @id @default(uuid())
-  employeeNumber String @unique
-  department     String
-  userId         String @unique
-  user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([activityId, studentId])
+  @@index([studentId])
 }
