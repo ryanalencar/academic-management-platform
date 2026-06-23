@@ -10,6 +10,7 @@ import { HealthModule } from './modules/health/health.module';
 import { ProxyModule } from './modules/proxy/proxy.module';
 import { AuthGatewayModule } from './modules/auth-gateway/auth-gateway.module';
 import { AcademicGatewayModule } from './modules/academic-gateway/academic-gateway.module';
+import { ActivityGatewayModule } from './modules/activity-gateway/activity-gateway.module';
 
 @Module({
   imports: [
@@ -18,9 +19,10 @@ import { AcademicGatewayModule } from './modules/academic-gateway/academic-gatew
       load: [servicesConfig],
     }),
     HealthModule,
-    ProxyModule,
+    // ProxyModule,
     AuthGatewayModule,
-    AcademicGatewayModule
+    AcademicGatewayModule,
+    ActivityGatewayModule
   ],
 })
 export class AppModule implements NestModule {
