@@ -9,6 +9,7 @@ import { servicesConfig } from './config/services.config';
 import { HealthModule } from './modules/health/health.module';
 import { ProxyModule } from './modules/proxy/proxy.module';
 import { AuthGatewayModule } from './modules/auth-gateway/auth-gateway.module';
+import { AcademicGatewayModule } from './modules/academic-gateway/academic-gateway.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { AuthGatewayModule } from './modules/auth-gateway/auth-gateway.module';
     }),
     HealthModule,
     ProxyModule,
-    AuthGatewayModule
+    AuthGatewayModule,
+    AcademicGatewayModule
   ],
 })
 export class AppModule implements NestModule {
