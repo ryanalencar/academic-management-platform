@@ -1,28 +1,28 @@
 name: academic-management-platform
 
 services:
-  # gateway:
-  #   container_name: academic-gateway
-  #   build:
-  #     context: ../gateway
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     NODE_ENV: production
-  #     GATEWAY_PORT: 3000
-  #     AUTH_SERVICE_URL: http://auth-service:3001
-  #     ACADEMIC_SERVICE_URL: http://academic-service:3002
-  #     ACTIVITY_SERVICE_URL: http://activity-service:3003
-  #   depends_on:
-  #     auth-service:
-  #       condition: service_started
-  #     academic-service:
-  #       condition: service_started
-  #     activity-service:
-  #       condition: service_started
-  #   networks:
-  #     - academic-network
+  gateway:
+    container_name: academic-gateway
+    build:
+      context: ../gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      GATEWAY_PORT: 3000
+      AUTH_SERVICE_URL: http://auth-service:3001
+      ACADEMIC_SERVICE_URL: http://academic-service:3002
+      ACTIVITY_SERVICE_URL: http://activity-service:3003
+    depends_on:
+      auth-service:
+        condition: service_started
+      academic-service:
+        condition: service_started
+      activity-service:
+        condition: service_started
+    networks:
+      - academic-network
 
   auth-service:
     container_name: auth-service

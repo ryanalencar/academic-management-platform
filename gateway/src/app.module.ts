@@ -8,6 +8,7 @@ import { RequestLoggerMiddleware } from './common/middlewares/request-logger.mid
 import { servicesConfig } from './config/services.config';
 import { HealthModule } from './modules/health/health.module';
 import { ProxyModule } from './modules/proxy/proxy.module';
+import { AuthGatewayModule } from './modules/auth-gateway/auth-gateway.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ProxyModule } from './modules/proxy/proxy.module';
     }),
     HealthModule,
     ProxyModule,
+    AuthGatewayModule
   ],
 })
 export class AppModule implements NestModule {
