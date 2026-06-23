@@ -1,6 +1,19 @@
 name: academic-management-platform
 
 services:
+  frontend:
+    container_name: academic-frontend
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      gateway:
+        condition: service_started
+    networks:
+      - academic-network
+
   gateway:
     container_name: academic-gateway
     build:
