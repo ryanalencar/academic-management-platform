@@ -12,8 +12,8 @@ export function Classes() {
   const [classes, setClasses] = useState<Class[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [semestre, setSemestre] = useState('');
-  const [horario, setHorario] = useState('');
+  const [semester, setSemester] = useState('');
+  const [schedule, setSchedule] = useState('');
   const [disciplineId, setDisciplineId] = useState('');
 
   useEffect(() => {
@@ -34,11 +34,11 @@ export function Classes() {
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     try {
-      await classService.create({ semestre, horario, disciplineId });
+      await classService.create({ semester, schedule, disciplineId });
       toast.success('Turma criada!');
       setShowModal(false);
-      setSemestre('');
-      setHorario('');
+      setSemester('');
+      setSchedule('');
       setDisciplineId('');
       loadClasses();
     } catch {
@@ -57,12 +57,12 @@ export function Classes() {
 
       <Table
         columns={[
-          { key: 'semestre', header: 'Semestre' },
-          { key: 'horario', header: 'Horário' },
+          { key: 'semester', header: 'Semestre' },
+          { key: 'schedule', header: 'Horário' },
           {
             key: 'discipline',
             header: 'Disciplina',
-            render: (c) => c.discipline?.nome || c.disciplineId,
+            render: (c) => c.discipline?.name || c.disciplineId,
           },
         ]}
         data={classes}
@@ -70,8 +70,8 @@ export function Classes() {
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Nova Turma">
         <form onSubmit={handleCreate}>
-          <Input label="Semestre" value={semestre} onChange={(e) => setSemestre(e.target.value)} placeholder="2026.1" required />
-          <Input label="Horário" value={horario} onChange={(e) => setHorario(e.target.value)} placeholder="SEG/QUA 10:00-12:00" required />
+          <Input label="Semestre" value={semester} onChange={(e) => setSemester(e.target.value)} placeholder="2026.1" required />
+          <Input label="Horário" value={schedule} onChange={(e) => setSchedule(e.target.value)} placeholder="SEG/QUA 10:00-12:00" required />
           <Input label="ID da Disciplina" value={disciplineId} onChange={(e) => setDisciplineId(e.target.value)} required />
           <Button type="submit">Criar</Button>
         </form>

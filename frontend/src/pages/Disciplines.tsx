@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { disciplineService } from '../services/disciplineService';
+import { useAuth } from '../hooks/useAuth';
 import { Table } from '../components/ui/Table';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
@@ -10,13 +11,14 @@ import type { Discipline } from '../types';
 import toast from 'react-hot-toast';
 
 export function Disciplines() {
+  const { user } = useAuth();
   const [disciplines, setDisciplines] = useState<Discipline[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [nome, setNome] = useState('');
-  const [codigo, setCodigo] = useState('');
-  const [cargaHoraria, setCargaHoraria] = useState('');
-  const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [code, setCode] = useState('');
+  const [workload, setWorkload] = useState('');
+  const _navigate = useNavigate();
 
   useEffect(() => {
     loadDisciplines();
@@ -37,15 +39,16 @@ export function Disciplines() {
     e.preventDefault();
     try {
       await disciplineService.create({
-        nome,
-        codigo,
-        cargaHoraria: Number(cargaHoraria),
+        name,
+        code,
+        workload: Number(workload),
+        professorId: user?.id,
       });
       toast.success('Disciplina criada!');
       setShowModal(false);
-      setNome('');
-      setCodigo('');
-      setCargaHoraria('');
+      setName('');
+      setCode('');
+      setWorkload('');
       loadDisciplines();
     } catch {
       toast.error('Erro ao criar disciplina.');
@@ -63,19 +66,18 @@ export function Disciplines() {
 
       <Table
         columns={[
-          { key: 'codigo', header: 'Código' },
-          { key: 'nome', header: 'Nome' },
-          { key: 'cargaHoraria', header: 'Carga Horária' },
+          { key: 'code', header: 'Código' },
+          { key: 'name', header: 'Nome' },
+          { key: 'workload', header: 'Carga Horária' },
         ]}
         data={disciplines}
-        onRowClick={(d) => navigate(`/disciplines/${d.id}`)}
       />
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Nova Disciplina">
         <form onSubmit={handleCreate}>
-          <Input label="Nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
-          <Input label="Código" value={codigo} onChange={(e) => setCodigo(e.target.value)} required />
-          <Input label="Carga Horária" type="number" value={cargaHoraria} onChange={(e) => setCargaHoraria(e.target.value)} required />
+          <Input label="Nome" value={name} onChange={(e) => setName(e.target.value)} required />
+          <Input label="Código" value={code} onChange={(e) => setCode(e.target.value)} placeholder="CMP1234" required />
+          <Input label="Carga Horária" type="number" value={workload} onChange={(e) => setWorkload(e.target.value)} required />
           <Button type="submit">Criar</Button>
         </form>
       </Modal>

@@ -7,8 +7,7 @@ import { Dashboard } from '../pages/Dashboard';
 import { Disciplines } from '../pages/Disciplines';
 import { Classes } from '../pages/Classes';
 import { Enrollments } from '../pages/Enrollments';
-import { Activities } from '../pages/Activities';
-import { Submissions } from '../pages/Submissions';
+import { Grades } from '../pages/Grades';
 
 export const router = createBrowserRouter([
   {
@@ -31,8 +30,7 @@ export const router = createBrowserRouter([
       { path: 'disciplines', element: <Disciplines /> },
       { path: 'classes', element: <Classes /> },
       { path: 'enrollments', element: <Enrollments /> },
-      { path: 'activities', element: <Activities /> },
-      { path: 'submissions', element: <Submissions /> },
+      { path: 'grades', element: <Grades /> },
     ],
   },
 ]);

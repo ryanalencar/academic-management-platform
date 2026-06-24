@@ -4,6 +4,7 @@ export enum UserRole {
 }
 
 export enum EnrollmentStatus {
+  ACTIVE = 'ACTIVE',
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   CANCELLED = 'CANCELLED',
@@ -13,7 +14,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: string;
+  type: string;
 }
 
 export interface Student extends User {
@@ -22,28 +23,29 @@ export interface Student extends User {
 }
 
 export interface Professor extends User {
-  siape: string;
+  employeeNumber: string;
   department: string;
 }
 
 export interface Discipline {
   id: string;
-  nome: string;
-  codigo: string;
-  cargaHoraria: number;
+  name: string;
+  code: string;
+  workload: number;
+  professorId?: string;
 }
 
 export interface Class {
   id: string;
-  semestre: string;
-  horario: string;
+  semester: string;
+  schedule: string;
   disciplineId: string;
   discipline?: Discipline;
 }
 
 export interface Enrollment {
   id: string;
-  data: string;
+  date: string;
   status: EnrollmentStatus;
   studentId: string;
   classId: string;
@@ -51,16 +53,16 @@ export interface Enrollment {
 
 export interface Activity {
   id: string;
-  titulo: string;
-  descricao: string;
-  prazo: string;
+  title: string;
+  description: string;
+  dueDate: string;
   classId: string;
 }
 
 export interface Submission {
   id: string;
-  dataEntrega: string;
-  nota: number | null;
+  submittedAt: string;
+  grade: number | null;
   activityId: string;
   studentId: string;
 }
@@ -82,7 +84,7 @@ export interface RegisterProfessorRequest {
   name: string;
   email: string;
   password: string;
-  siape: string;
+  employeeNumber: string;
   department: string;
 }
 

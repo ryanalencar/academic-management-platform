@@ -19,7 +19,7 @@ export default defineConfig({
       '/api/academic': {
         target: 'http://localhost:3002',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/api\/academic/, ''),
       },
       '/api/activities': {
         target: 'http://localhost:3003',
