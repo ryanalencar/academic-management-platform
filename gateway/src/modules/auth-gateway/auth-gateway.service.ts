@@ -6,8 +6,9 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosError, AxiosRequestConfig, Method } from 'axios';
+import { Request } from 'express';
 
-type AuthRoute = 'login' | 'students' | 'professors';
+type AuthRoute = 'login' | 'students' | 'professors' | 'me';
 
 type GatewayForwardResponse<T = unknown> = {
   statusCode: number;
@@ -42,10 +43,15 @@ export class AuthGatewayService {
     return this.forward('POST', 'professors', payload);
   }
 
+  async getMe(request: Request): Promise<GatewayForwardResponse> {
+    return this.forward('GET', 'me', undefined, this.buildHeaders(request));
+  }
+
   private async forward(
     method: Method,
     route: AuthRoute,
-    payload: unknown,
+    payload?: unknown,
+    headers?: Record<string, string>,
   ): Promise<GatewayForwardResponse> {
     const url = this.buildAuthServiceUrl(route);
 
@@ -53,6 +59,7 @@ export class AuthGatewayService {
       method,
       url,
       data: payload,
+      headers,
       validateStatus: () => true,
     };
 
@@ -84,5 +91,13 @@ export class AuthGatewayService {
     const baseUrl = this.authServiceUrl.replace(/\/$/, '');
 
     return `${baseUrl}/auth/${route}`;
+  }
+
+  private buildHeaders(request: Request): Record<string, string> {
+    const authorization = request.headers.authorization;
+
+    return {
+      ...(authorization ? { authorization } : {}),
+    };
   }
 }

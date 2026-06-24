@@ -84,7 +84,7 @@ export class AcademicGatewayService {
     const baseUrl = this.academicServiceUrl.replace(/\/$/, '');
     const normalizedPath = path ? `/${path.replace(/^\//, '')}` : '';
 
-    return `${baseUrl}/academic/${resource}${normalizedPath}`;
+    return `${baseUrl}/${resource}${normalizedPath}`;
   }
 
   private buildHeaders(request: Request): Record<string, string> {

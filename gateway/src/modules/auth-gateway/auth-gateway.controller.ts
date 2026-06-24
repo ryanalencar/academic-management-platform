@@ -1,12 +1,14 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthGatewayService } from './auth-gateway.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterProfessorDto } from './dto/register-professor.dto';
@@ -47,6 +49,17 @@ export class AuthGatewayController {
   ): Promise<void> {
     const authResponse =
       await this.authGatewayService.registerProfessor(registerProfessorDto);
+
+    response.status(authResponse.statusCode).json(authResponse.data);
+  }
+
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  async getMe(
+    @Req() request: Request,
+    @Res() response: Response,
+  ): Promise<void> {
+    const authResponse = await this.authGatewayService.getMe(request);
 
     response.status(authResponse.statusCode).json(authResponse.data);
   }
