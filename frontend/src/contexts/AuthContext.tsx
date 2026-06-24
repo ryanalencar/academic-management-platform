@@ -15,6 +15,12 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
+function applyRoleClass(userType?: string) {
+  document.body.classList.remove('role-student', 'role-professor');
+  if (userType === 'STUDENT') document.body.classList.add('role-student');
+  if (userType === 'PROFESSOR') document.body.classList.add('role-professor');
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -24,8 +30,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
     if (storedToken && storedUser) {
+      const parsed = JSON.parse(storedUser);
       setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      setUser(parsed);
+      applyRoleClass(parsed.type);
     }
     setLoading(false);
   }, []);
@@ -35,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('user', JSON.stringify(userData));
     setToken(accessToken);
     setUser(userData);
+    applyRoleClass(userData.type);
   }
 
   async function login(data: LoginRequest) {
@@ -57,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('user');
     setToken(null);
     setUser(null);
+    applyRoleClass();
   }
 
   return (

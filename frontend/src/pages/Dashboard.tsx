@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { UserRole } from '../types';
 import { Card } from '../components/ui/Card';
@@ -5,7 +6,8 @@ import { MdMenuBook, MdClass, MdPeople, MdAssignment } from 'react-icons/md';
 
 export function Dashboard() {
   const { user } = useAuth();
-  const isProfessor = user?.role === UserRole.PROFESSOR;
+  const navigate = useNavigate();
+  const isProfessor = user?.type === UserRole.PROFESSOR;
 
   return (
     <div className="page">
@@ -20,39 +22,43 @@ export function Dashboard() {
         {isProfessor ? (
           <>
             <Card title="Disciplinas" className="dashboard-card">
-              <MdMenuBook size={32} />
-              <p>Gerencie suas disciplinas e conteúdos.</p>
+              <div onClick={() => navigate('/disciplines')} style={{ cursor: 'pointer' }}>
+                <MdMenuBook size={32} />
+                <p>Gerencie suas disciplinas e conteúdos.</p>
+              </div>
             </Card>
             <Card title="Turmas" className="dashboard-card">
-              <MdClass size={32} />
-              <p>Veja suas turmas e alunos matriculados.</p>
+              <div onClick={() => navigate('/classes')} style={{ cursor: 'pointer' }}>
+                <MdClass size={32} />
+                <p>Veja suas turmas e alunos matriculados.</p>
+              </div>
             </Card>
             <Card title="Matrículas Pendentes" className="dashboard-card">
-              <MdPeople size={32} />
-              <p>Aprove ou rejeite solicitações de matrícula.</p>
-            </Card>
-            <Card title="Atividades" className="dashboard-card">
-              <MdAssignment size={32} />
-              <p>Crie e corrija atividades das suas turmas.</p>
+              <div onClick={() => navigate('/enrollments')} style={{ cursor: 'pointer' }}>
+                <MdPeople size={32} />
+                <p>Aprove ou rejeite solicitações de matrícula.</p>
+              </div>
             </Card>
           </>
         ) : (
           <>
-            <Card title="Minhas Turmas" className="dashboard-card">
-              <MdClass size={32} />
-              <p>Veja as turmas em que você está matriculado.</p>
+            <Card title="Disciplinas" className="dashboard-card">
+              <div onClick={() => navigate('/disciplines')} style={{ cursor: 'pointer' }}>
+                <MdMenuBook size={32} />
+                <p>Veja as disciplinas disponíveis.</p>
+              </div>
             </Card>
-            <Card title="Atividades" className="dashboard-card">
-              <MdAssignment size={32} />
-              <p>Confira atividades pendentes e prazos.</p>
+            <Card title="Turmas" className="dashboard-card">
+              <div onClick={() => navigate('/classes')} style={{ cursor: 'pointer' }}>
+                <MdClass size={32} />
+                <p>Veja as turmas disponíveis.</p>
+              </div>
             </Card>
-            <Card title="Minhas Notas" className="dashboard-card">
-              <MdMenuBook size={32} />
-              <p>Acompanhe suas notas e entregas.</p>
-            </Card>
-            <Card title="Nova Matrícula" className="dashboard-card">
-              <MdPeople size={32} />
-              <p>Matricule-se em novas turmas disponíveis.</p>
+            <Card title="Matrículas" className="dashboard-card">
+              <div onClick={() => navigate('/enrollments')} style={{ cursor: 'pointer' }}>
+                <MdPeople size={32} />
+                <p>Solicite matrícula em turmas.</p>
+              </div>
             </Card>
           </>
         )}

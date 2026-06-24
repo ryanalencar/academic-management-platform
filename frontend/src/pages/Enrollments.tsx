@@ -7,7 +7,7 @@ import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { Card } from '../components/ui/Card';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
-import { UserRole, EnrollmentStatus, type Enrollment, type Class } from '../types';
+import { UserRole, type Enrollment, type Class } from '../types';
 import toast from 'react-hot-toast';
 
 export function Enrollments() {
@@ -17,8 +17,9 @@ export function Enrollments() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState('');
+  const [professorClassId, setProfessorClassId] = useState('');
 
-  const isProfessor = user?.tipo === UserRole.PROFESSOR;
+  const isProfessor = user?.type === UserRole.PROFESSOR;
 
   useEffect(() => {
     loadData();
@@ -26,12 +27,13 @@ export function Enrollments() {
 
   async function loadData() {
     try {
-      const [enrollmentData, classData] = await Promise.all([
-        enrollmentService.list(),
-        classService.list(),
-      ]);
-      setEnrollments(enrollmentData);
+      const classData = await classService.list();
       setClasses(classData);
+
+      if (user?.id && !isProfessor) {
+        const enrollmentData = await enrollmentService.listByStudent(user.id);
+        setEnrollments(enrollmentData);
+      }
     } catch {
       toast.error('Erro ao carregar dados.');
     } finally {
@@ -39,10 +41,21 @@ export function Enrollments() {
     }
   }
 
+  async function loadClassEnrollments(classId: string) {
+    setProfessorClassId(classId);
+    try {
+      const data = await enrollmentService.listByClass(classId);
+      setEnrollments(data);
+    } catch {
+      toast.error('Erro ao carregar matrículas da turma.');
+    }
+  }
+
   async function handleEnroll(e: React.FormEvent) {
     e.preventDefault();
+    if (!user?.id) return;
     try {
-      await enrollmentService.create({ classId: selectedClassId });
+      await enrollmentService.create({ classId: selectedClassId, studentId: user.id });
       toast.success('Matrícula solicitada!');
       setShowModal(false);
       setSelectedClassId('');
@@ -56,22 +69,26 @@ export function Enrollments() {
     try {
       await enrollmentService.updateStatus(id, status);
       toast.success(`Matrícula ${status === 'APPROVED' ? 'aprovada' : 'cancelada'}!`);
-      loadData();
+      if (professorClassId) {
+        loadClassEnrollments(professorClassId);
+      }
     } catch {
       toast.error('Erro ao atualizar matrícula.');
     }
   }
 
-  function statusBadge(status: EnrollmentStatus) {
-    const colors: Record<EnrollmentStatus, string> = {
-      [EnrollmentStatus.PENDING]: '#f59e0b',
-      [EnrollmentStatus.APPROVED]: '#10b981',
-      [EnrollmentStatus.CANCELLED]: '#ef4444',
+  function statusBadge(status: string) {
+    const colors: Record<string, string> = {
+      ACTIVE: '#10b981',
+      PENDING: '#f59e0b',
+      APPROVED: '#10b981',
+      CANCELLED: '#ef4444',
     };
-    const labels: Record<EnrollmentStatus, string> = {
-      [EnrollmentStatus.PENDING]: 'Pendente',
-      [EnrollmentStatus.APPROVED]: 'Aprovada',
-      [EnrollmentStatus.CANCELLED]: 'Cancelada',
+    const labels: Record<string, string> = {
+      ACTIVE: 'Ativa',
+      PENDING: 'Pendente',
+      APPROVED: 'Aprovada',
+      CANCELLED: 'Cancelada',
     };
     return (
       <span style={{
@@ -80,9 +97,9 @@ export function Enrollments() {
         fontSize: '0.75rem',
         fontWeight: 600,
         color: '#fff',
-        background: colors[status],
+        background: colors[status] || '#9ca3af',
       }}>
-        {labels[status]}
+        {labels[status] || status}
       </span>
     );
   }
@@ -98,40 +115,61 @@ export function Enrollments() {
         )}
       </div>
 
-      {isProfessor ? (
+      {isProfessor && (
+        <>
+          <Card title="Selecione uma turma">
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+              {classes.map((c) => (
+                <Button
+                  key={c.id}
+                  variant={professorClassId === c.id ? 'primary' : 'secondary'}
+                  onClick={() => loadClassEnrollments(c.id)}
+                >
+                  {c.discipline?.name || 'Turma'} — {c.semester}
+                </Button>
+              ))}
+              {classes.length === 0 && <p>Nenhuma turma cadastrada.</p>}
+            </div>
+          </Card>
+
+          {professorClassId && (
+            <Card title="Alunos Matriculados" className="mt-16">
+              <Table
+                columns={[
+                  { key: 'studentId', header: 'ID do Aluno' },
+                  { key: 'status', header: 'Status', render: (e) => statusBadge(e.status) },
+                  {
+                    key: 'actions',
+                    header: 'Ações',
+                    render: (e) => (
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        {e.status !== 'CANCELLED' && (
+                          <Button variant="danger" onClick={() => handleUpdateStatus(e.id, 'CANCELLED')}>
+                            Cancelar
+                          </Button>
+                        )}
+                        {e.status === 'CANCELLED' && (
+                          <Button variant="primary" onClick={() => handleUpdateStatus(e.id, 'ACTIVE')}>
+                            Reativar
+                          </Button>
+                        )}
+                      </div>
+                    ),
+                  },
+                ]}
+                data={enrollments}
+                emptyMessage="Nenhum aluno matriculado nesta turma."
+              />
+            </Card>
+          )}
+        </>
+      )}
+
+      {!isProfessor && (
         <Card>
           <Table
             columns={[
-              { key: 'studentId', header: 'Aluno' },
               { key: 'classId', header: 'Turma' },
-              { key: 'data', header: 'Data', render: (e) => new Date(e.data).toLocaleDateString('pt-BR') },
-              { key: 'status', header: 'Status', render: (e) => statusBadge(e.status) },
-              {
-                key: 'actions',
-                header: 'Ações',
-                render: (e) =>
-                  e.status === EnrollmentStatus.PENDING ? (
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <Button variant="primary" onClick={() => handleUpdateStatus(e.id, 'APPROVED')}>
-                        Aprovar
-                      </Button>
-                      <Button variant="danger" onClick={() => handleUpdateStatus(e.id, 'CANCELLED')}>
-                        Rejeitar
-                      </Button>
-                    </div>
-                  ) : null,
-              },
-            ]}
-            data={enrollments}
-            emptyMessage="Nenhuma matrícula encontrada."
-          />
-        </Card>
-      ) : (
-        <Card>
-          <Table
-            columns={[
-              { key: 'classId', header: 'Turma' },
-              { key: 'data', header: 'Data', render: (e) => new Date(e.data).toLocaleDateString('pt-BR') },
               { key: 'status', header: 'Status', render: (e) => statusBadge(e.status) },
             ]}
             data={enrollments}
@@ -152,7 +190,7 @@ export function Enrollments() {
               <option value="">Selecione...</option>
               {classes.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.discipline?.nome || 'Disciplina'} — {c.semestre} ({c.horario})
+                  {c.discipline?.name || 'Disciplina'} — {c.semester} ({c.schedule})
                 </option>
               ))}
             </select>

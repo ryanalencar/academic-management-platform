@@ -428,6 +428,53 @@ tr.clickable:hover {
   color: var(--white);
 }
 
+/* Role-based background */
+body.role-student {
+  --primary: #16a34a;
+  --primary-hover: #15803d;
+}
+
+body.role-student .main-content {
+  background: #e8f5e9;
+}
+
+body.role-professor .main-content {
+  background: #f3f4f6;
+}
+
+body.dark.role-student {
+  --primary: #22c55e;
+  --primary-hover: #16a34a;
+}
+
+body.dark.role-student .main-content {
+  background: #0d1510;
+}
+
+body.dark.role-professor .main-content {
+  background: #111827;
+}
+
+body.role-student .sidebar-role {
+  background: #dcfce7;
+  color: #166534;
+}
+
+body.role-professor .sidebar-role {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+body.dark.role-student .sidebar-role {
+  background: #166534;
+  color: #dcfce7;
+}
+
+body.dark.role-professor .sidebar-role {
+  background: #1e40af;
+  color: #dbeafe;
+}
+
 /* Loading */
 .loading-screen {
   display: flex;
@@ -436,4 +483,97 @@ tr.clickable:hover {
   height: 100vh;
   font-size: 1.1rem;
   color: var(--text-light);
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px;
+  cursor: pointer;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+}
+
+.theme-toggle:hover {
+  background: var(--bg);
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+/* Dark Mode */
+body.dark {
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --danger: #f87171;
+  --danger-hover: #ef4444;
+  --secondary: #9ca3af;
+  --bg: #111827;
+  --white: #1f2937;
+  --text: #f3f4f6;
+  --text-light: #9ca3af;
+  --border: #374151;
+}
+
+body.dark .auth-card {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .form-field input,
+body.dark .form-field select,
+body.dark textarea {
+  background: #111827;
+  color: #f3f4f6;
+}
+
+body.dark .role-toggle button {
+  background: #1f2937;
+  color: #9ca3af;
+}
+
+body.dark .role-toggle button.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+body.dark table {
+  background: #1f2937;
+}
+
+body.dark th {
+  background: #111827;
+}
+
+body.dark .modal-content {
+  background: #1f2937;
+}
+
+body.dark .modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+body.dark .dashboard-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .btn-secondary {
+  background: #374151;
+  color: #f3f4f6;
+  border-color: #4b5563;
+}
+
+body.dark .btn-logout {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: transparent;
+}
+
+body.dark .btn-logout:hover {
+  background: var(--danger);
+  color: #fff;
 }
