@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
-import { UserRole, type Class, type Discipline, type Enrollment } from '../types';
+import { UserRole, type Class, type Enrollment } from '../types';
 import toast from 'react-hot-toast';
 
 interface StudentGrades {
@@ -29,7 +29,6 @@ function saveGrades(classId: string, grades: Record<string, StudentGrades>) {
 export function Grades() {
   const { user } = useAuth();
   const [classes, setClasses] = useState<Class[]>([]);
-  const [disciplines, setDisciplines] = useState<Discipline[]>([]);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [selectedClassId, setSelectedClassId] = useState('');
   const [grades, setGrades] = useState<Record<string, StudentGrades>>({});
@@ -47,7 +46,6 @@ export function Grades() {
         classService.list(),
         disciplineService.list(),
       ]);
-      setDisciplines(discData);
       const enriched = classData.map((c) => ({
         ...c,
         discipline: discData.find((d) => d.id === c.disciplineId),

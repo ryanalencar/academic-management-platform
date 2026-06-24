@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { disciplineService } from '../services/disciplineService';
 import { useAuth } from '../hooks/useAuth';
 import { Table } from '../components/ui/Table';
@@ -18,7 +17,6 @@ export function Disciplines() {
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [workload, setWorkload] = useState('');
-  const _navigate = useNavigate();
 
   useEffect(() => {
     loadDisciplines();

@@ -14,7 +14,7 @@ export function Register() {
   const [password, setPassword] = useState('');
   const [registrationNumber, setRegistrationNumber] = useState('');
   const [course, setCourse] = useState('');
-  const [siape, setSiape] = useState('');
+  const [employeeNumber, setEmployeeNumber] = useState('');
   const [department, setDepartment] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +28,7 @@ export function Register() {
       if (role === 'student') {
         await registerStudent({ name, email, password, registrationNumber, course });
       } else {
-        await registerProfessor({ name, email, password, siape, department });
+        await registerProfessor({ name, email, password, employeeNumber, department });
       }
       toast.success('Cadastro realizado com sucesso!');
       navigate('/');
@@ -73,7 +73,7 @@ export function Register() {
             </>
           ) : (
             <>
-              <Input label="SIAPE" value={siape} onChange={(e) => setSiape(e.target.value)} required />
+              <Input label="SIAPE" value={employeeNumber} onChange={(e) => setEmployeeNumber(e.target.value)} required />
               <Input label="Departamento" value={department} onChange={(e) => setDepartment(e.target.value)} required />
             </>
           )}

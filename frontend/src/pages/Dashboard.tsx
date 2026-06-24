@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { UserRole } from '../types';
 import { Card } from '../components/ui/Card';
-import { MdMenuBook, MdClass, MdPeople, MdAssignment } from 'react-icons/md';
+import { MdMenuBook, MdClass, MdPeople } from 'react-icons/md';
 
 export function Dashboard() {
   const { user } = useAuth();
